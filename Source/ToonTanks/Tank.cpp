@@ -4,6 +4,8 @@
 #include "Tank.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/PlayerController.h"
 
 ATank::ATank()
 {
@@ -15,9 +17,34 @@ ATank::ATank()
 
 }
 
+void ATank::BeginPlay()
+{
+    Super::BeginPlay();
+
+    PlayerControllerRef = Cast<APlayerController>(GetController());
+}
+
+void ATank::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+    if(PlayerControllerRef)
+    {
+    FHitResult HitResult;
+    PlayerControllerRef -> GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
+    
+    DrawDebugSphere(GetWorld(),HitResult.ImpactPoint,25.f, 12, FColor::Red,false,-1.f);
+
+    }
+
+
+
+}
+
 void ATank::Move(float AxisValue)
 {
- UE_LOG(LogTemp,Warning,TEXT("Axis Value are: %f"), AxisValue);
+    FVector DeltaLocation = FVector::ZeroVector;
+    DeltaLocation.X = AxisValue * MoveSpeed * UGameplayStatics::GetWorldDeltaSeconds(this);
+    AddActorLocalOffset(DeltaLocation,true);
 }
 
 void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -25,7 +52,20 @@ void ATank::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 
     PlayerInputComponent -> BindAxis(TEXT("MoveForward"), this, &ATank::Move);
-    PlayerInputComponent -> BindAxis(TEXT("Turn"), this, &ATank::Move);
-    PlayerInputComponent -> BindAxis(TEXT("RotateTurret"), this, &ATank::Move);
+    PlayerInputComponent -> BindAxis(TEXT("Turn"), this, &ATank::Turn);
+    PlayerInputComponent -> BindAxis(TEXT("RotateTurret"), this, &ATank::RotateTurret);
+
+}
+
+void ATank::Turn(float AxisValue)
+{
+    FRotator DeltaRotation = FRotator::ZeroRotator;
+    DeltaRotation.Yaw = AxisValue * TurnRate * UGameplayStatics::GetWorldDeltaSeconds(this);
+    AddActorLocalRotation(DeltaRotation,true);
+}
+
+void ATank::RotateTurret(float AxisValue)
+{
+
 }
 
