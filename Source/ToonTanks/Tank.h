@@ -26,5 +26,5 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float TurnRate = 100.f;
 
-	class APlayerController *PlayerControllerRef;
+	class APlayerController* PlayerControllerRef;
 };

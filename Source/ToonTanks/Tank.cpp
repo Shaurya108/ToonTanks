@@ -41,7 +41,6 @@ void ATank::SetupPlayerInputComponent(UInputComponent *PlayerInputComponent)
 
     PlayerInputComponent->BindAxis(TEXT("MoveForward"), this, &ATank::Move);
     PlayerInputComponent->BindAxis(TEXT("Turn"), this, &ATank::Turn);
-    //PlayerInputComponent->BindAxis(TEXT("RotateTurret"), this, &ATank::RotateTurret);
 }
 
 void ATank::Move(float AxisValue)
