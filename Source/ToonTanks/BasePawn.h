@@ -17,6 +17,7 @@ public:
 protected:
 
     void RotateTurret(FVector LookAtTarget);
+	void Fire();
 
 private:
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,category = "Components" , meta = (AllowPrivateAccess = "true"))
